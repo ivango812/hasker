@@ -1,0 +1,12 @@
+<div class="container">
+    <h4 class="text-center">Trending</h4>
+    {% for question in trending_questions %}
+    <div class="row py-1">
+        <span class="badge badge-success p-2 bg-white border text-success mr-2">
+            {{ question.votes_sum }}<br />
+            <small>votes</small>
+        </span>
+        <a href="{% url 'question' question.id %}">{{ question.title|truncatechars:24 }}</a>
+    </div>
+    {% endfor %}
+</div>

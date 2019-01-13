@@ -1,0 +1,12 @@
+    <a href="{% url 'vote' model_entity=model pk=object.pk value_alias='like' %}">Like!</a>
+    {{ object.votes_sum }}
+    <a href="{% url 'vote' model_entity=model pk=object.pk value_alias='dislike' %}">Dislike!</a>
+
+
+{%  comment "Different vote widget design" %}
+
+    <a href="{% url 'vote' model_entity='answer' pk=answer.pk value_alias='like' %}"><h4 class="oi oi-caret-top text-light"></h4></a><br/>
+    {{ answer.votes_sum }}<br/>
+    <a href="{% url 'vote' model_entity='answer' pk=answer.pk value_alias='dislike' %}"><h4 class="oi oi-caret-bottom text-light"></h4></a><br/>
+
+{% endcomment %}

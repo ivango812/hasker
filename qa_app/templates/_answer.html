@@ -1,0 +1,36 @@
+{% load thumbnail %}
+{% load static %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-2 text-center">
+
+            {% include '_vote_widget.html' with model='answer' object=answer %}
+
+            {% if answer.is_right %}
+                <span class="oi oi-check text-success"></span>
+            {% else %}
+                {% if user == question.author or user.is_superuser%}
+                    <a class="btn btn-outline-success" href="{% url 'right_answer' answer.pk %}" role="button">Right!</a>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="col-sm">
+
+            <p>{{ answer.content }}</p>
+
+            <div class="text-right">
+                <small class="text-black-50">answered {{ answer.created_at|timesince }} ago
+                    <a href="#">{{ answer.author }}</a></small>
+
+                {% thumbnail answer.author.profile.avatar "40x40" crop="center" as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" class="img-thumbnail"/>
+                {% empty %}
+                    <img src="{% static 'images/default.png' %}" width="60" height="60" class="img-thumbnail"/>
+                {% endthumbnail %}
+
+            </div>
+        </div>
+    </div>
+</div>
+<hr class="my-1">

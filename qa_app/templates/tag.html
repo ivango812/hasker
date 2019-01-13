@@ -1,0 +1,13 @@
+{% extends '_base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <h1>Tag <span class="badge badge-primary">{{ tag.name }}</span></h1>
+
+    {% for question in tag.questions.all %}
+        <li>{{ question.created_at }}, {{ question.author }}: <a href="{% url 'question' question.id %}">{{ question.title }}</a></li>
+    {% endfor %}
+
+{%  endblock %}

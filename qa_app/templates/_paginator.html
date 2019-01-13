@@ -1,0 +1,10 @@
+{% if paginator.num_pages > 1 %}
+    <nav>
+        <ul class="pagination">
+        {% for page_num in paginator.page_range %}
+            <li class="page-item{% if page_obj.number == page_num %} active{% endif %}">
+                <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a></li>
+        {% endfor %}
+        </ul>
+    </nav>
+{% endif %}

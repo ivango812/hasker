@@ -1,0 +1,26 @@
+{% extends '_base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Index page{% endblock title %}
+
+{% block content %}
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link{% if request.path != '/hot' %} active{% endif %}" href="{% url 'index' %}">New questions</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if request.path == '/hot' %} active{% endif %}" href="{% url 'hot' %}">Hot questions</a>
+        </li>
+    </ul>
+
+    <div class="rounded-bottom border-left border-right border-bottom p-3 mb-2">
+    {% for question in last_questions %}
+        {% include '_question_short.html' %}
+    {% endfor %}
+    </div>
+
+    {% include '_paginator.html' %}
+
+{%  endblock %}
