@@ -3,6 +3,8 @@ from .models import Question, Answer, User  #, UserProfile
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.conf import settings
+from django.utils.safestring import mark_safe
+from sorl.thumbnail import get_thumbnail
 
 
 class QuestionForm(forms.ModelForm):
@@ -42,8 +44,18 @@ class SearchForm(forms.Form):
     search = forms.CharField()
 
 
+class AdminImageWidget(forms.ClearableFileInput):
+    def render(self, name, value, attrs=None, renderer=None):
+        output = []
+        if value and getattr(value, "url", None):
+            t = get_thumbnail(value, '120x120')
+            output.append('<img src="{}"/><br/>'.format(t.url))
+        output.append(super().render(name, value, attrs, renderer))
+        return mark_safe(u''.join(output))
+
+
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'avatar']
-        widgets = {'username': forms.TextInput(attrs={'readonly': 'readonly'})}
+        widgets = {'username': forms.TextInput(attrs={'readonly': 'readonly'}), 'avatar': AdminImageWidget}

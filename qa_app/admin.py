@@ -1,21 +1,13 @@
 from django.contrib import admin
-from qa_app.models import Tag, Question, Answer, Vote, User  #, UserProfile
+from qa_app.models import Tag, Question, Answer, Vote, User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.admin import UserCreationForm
-# from django.contrib.auth.models import User
-
-
-# class AnswerTagInline(admin.TabularInline):
-#     model = Answer.tags.though
-#     extra = 0
-#     extra = 1
-    # raw_id_fields = ('answer', )
+from sorl.thumbnail.admin import AdminImageMixin
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ('name',)
-    # inlines = [AnswerTagInline]
 
 
 @admin.register(Question)
@@ -26,22 +18,9 @@ class QuestionAdmin(admin.ModelAdmin):
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
     list_display = ('question', 'content_short', 'is_right', 'author', 'created_at')
-    # inlines = [AnswerTagInline]
-    # pass
 
 
-# @admin.register(UserProfile)
-# class UserProfileAdmin(admin.ModelAdmin):
-#     pass
-
-
-# class ProfileInline(admin.StackedInline):
-#     model = UserProfile
-#     can_delete = False
-#     verbose_name_plural = 'Profile'
-
-
-class UserAdmin(BaseUserAdmin):
+class UserAdmin(AdminImageMixin, BaseUserAdmin):
     add_form = UserCreationForm
     add_fieldsets = (
         (None, {
@@ -62,25 +41,3 @@ admin.site.register(User, UserAdmin)
 @admin.register(Vote)
 class VoteAdmin(admin.ModelAdmin):
     list_display = ('created_at', 'value', 'question', 'answer')
-
-
-
-# class MembershipInline(admin.TabularInline):
-#     model = Group.members.through
-
-#
-# @admin.register(Person)
-# class PersonAdmin(admin.ModelAdmin):
-#     # inlines = [
-#     #     MembershipInline,
-#     # ]
-#     pass
-#
-#
-# @admin.register(Group)
-# class GroupAdmin(admin.ModelAdmin):
-#     # inlines = [
-#     #     MembershipInline,
-#     # ]
-#     pass
-#     # exclude = ('members',)
