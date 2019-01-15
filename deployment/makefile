@@ -1,5 +1,10 @@
 # yum install -y git
+# yum install -y make
+# cd ~
 # git clone https://github.com/ivango812/hasker.git
+# cd ./hasker/develompent
+# yum install -y git make
+# cd ~ && git clone https://github.com/ivango812/hasker.git && cd ./hasker/develompent
 
 HOST=127.0.0.1:8000
 PYTHON=python3.6
