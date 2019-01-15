@@ -6,20 +6,25 @@ import tempfile
 
 class IndexViewTestCase(TestCase):
 
-    def _create_image(self):
+    def _create_image(self, width=100, height=100, extension='PNG'):
         from PIL import Image
-        with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as f:
-            image = Image.new('RGB', (200, 200), 'white')
-            image.save(f, 'PNG')
+        with tempfile.NamedTemporaryFile(suffix='.{}'.format(extension.lower()), delete=False) as f:
+            image = Image.new('RGB', (width, height), 'white')
+            image.save(f, extension)
         return open(f.name, mode='rb')
 
     def setUp(self):
+        self.image1 = self._create_image(100, 100, 'PNG')
+        self.image2 = self._create_image(200, 200, 'JPEG')
         self.user = User.objects.create_user(username='username1', password='f0sP94Mfk1Cs')
+        self.user.avatar.save('avatar1.png', self.image1)
         self.user2 = User.objects.create_user(username='username2', password='f0sP94Mfk1Cs')
-        self.image = self._create_image()
+        self.user2.avatar.save('avatar2.png', self.image2)
+
 
     def tearDown(self):
-        self.image.close()
+        self.image1.close()
+        self.image2.close()
 
     def test_index_view(self):
         for i in range(1, 10):
@@ -254,10 +259,15 @@ class IndexViewTestCase(TestCase):
         response = self.client.get(profile_url)
         self.assertEqual(response.status_code, 200)
 
+        new_avatar = self._create_image(120, 120)
         response = self.client.post(profile_url, data={'username': self.user.username,
                                                        'email': 'test@yandex.ru',
-                                                       'avatar': self.image})
+                                                       'avatar': new_avatar})
+        new_avatar.close()
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('account'))
         user = User.objects.get(pk=self.user.pk)
         self.assertEqual(user.email, 'test@yandex.ru')
+        self.assertTrue(user.avatar)
+        self.assertEqual(user.avatar.width, 120)
+        self.assertEqual(user.avatar.height, 120)

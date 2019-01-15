@@ -1,25 +1,18 @@
 {% extends '_base.html' %}
 
 {% load crispy_forms_tags %}
-{% load thumbnail %}
-{% load static %}
 
 {% block title %}{{ question.title|striptags|truncatechars:128 }}{% endblock title %}
 
 {% block content %}
 
-    <h3>{{ question.title }}</h3>
-
+    <h1 class="h3">{{ question.title }}</h1>
     <p class="lead">{{ question.content|linebreaks }}</p>
 
     <div class="text-right">
         <small class="text-black-50">Asked {{ question.created_at|timesince }} ago
         <a href="#">{{ question.author }}</a></small>
-        {% thumbnail question.author.profile.avatar "40x40" as im %}
-            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" class="img-thumbnail">
-        {% empty %}
-            <img src="{% static 'images/default.png' %}" width="40" height="40" class="img-thumbnail"/>
-        {% endthumbnail %}
+        {% include '_avatar.html' with avatar=question.author.avatar width="40" height="40" %}
     </div>
 
     {% include '_vote_widget.html' with model='question' object=question %}
@@ -31,13 +24,11 @@
     {% endfor %}
     </p>
 
-    <h2 class="display-5">Answers</h2>
-
+    <p class="h5">Answers</p>
     {% for answer in answers %}
         {%  include '_answer.html' %}
     {% endfor %}
     {% include '_paginator.html' %}
-
 
     <h3>Your answer</h3>
     {% if user.is_authenticated %}

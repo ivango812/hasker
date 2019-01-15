@@ -8,12 +8,7 @@ from django.conf import settings
 
 
 class User(AbstractUser):
-    avatar = thumbnail.ImageField(verbose_name='Avatar', upload_to='avatars', default='default.png')
-
-
-# class UserProfile(models.Model):
-#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
-#     avatar = thumbnail.ImageField(verbose_name='Avatar', upload_to='avatars')
+    avatar = thumbnail.ImageField(verbose_name='Avatar', upload_to='avatars', blank=False)
 
 
 class Tag(models.Model):
@@ -44,11 +39,11 @@ class Question(models.Model):
         return votes['value__sum'] if votes['value__sum'] else 0
 
     def get_sorted_answers(self):
-        return self.answers.order_by('-is_right', 'created_at')
+        return self.answers.annotate(sum_votes=Sum('votes__value')).order_by('-is_right', '-sum_votes', 'created_at')
 
     @staticmethod
     def get_last():
-        return Question.objects.all().annotate(count_answers=Count('answers')).order_by('-created_at', '-id')
+        return Question.objects.annotate(count_answers=Count('answers')).order_by('-created_at', '-id')
 
     @staticmethod
     def get_hot():
@@ -70,6 +65,10 @@ class Question(models.Model):
         except Tag.DoesNotExist:
             return Question.objects.none()
 
+    @staticmethod
+    def get_by_user(user):
+        return Question.objects.filter(author=user).annotate(count_answers=Count('answers')).order_by('-created_at')
+
     def __str__(self):
         return truncatechars(self.title, 64)
 
@@ -89,6 +88,10 @@ class Answer(models.Model):
     def votes_sum(self):
         votes = self.votes.aggregate(Sum('value'))
         return votes['value__sum'] if votes['value__sum'] else 0
+
+    @staticmethod
+    def get_by_user(user):
+        return Answer.objects.filter(author=user).order_by('-created_at')
 
     def __str__(self):
         return self.content_short

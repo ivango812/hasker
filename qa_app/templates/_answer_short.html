@@ -1,0 +1,17 @@
+<div class="container p-0">
+    <div class="row">
+        <div class="col-sm-1">
+            {% include '_avatar.html' with avatar=answer.question.author.avatar width="60" height="60" %}
+        </div>
+        <div class="col-sm-11 p-0 pr-3">
+            <a href="{% url 'question' answer.question.id %}">{{ answer.question.title|truncatechars:128 }}</a><br/>
+            <small class="text-black-50">Asked {{ answer.question.created_at|timesince }} ago</small>
+            <br />
+            <p class="{% if answer.is_right %}bg-success text-white border-success{% endif %}p-2 border">{{ answer.content|truncatechars:255 }}<br/>
+            <small class="text-black-50">Answered {{ answer.created_at|timesince }} ago</small>
+            </p>
+
+        </div>
+    </div>
+</div>
+<hr class="my-1">

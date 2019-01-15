@@ -121,7 +121,8 @@ class QuestionCreateAnswerView(CreateView):
         self.initial = {'question': self.kwargs['pk']}
         context = super().get_context_data(**kwargs)
         question = Question.objects.get(pk=self.kwargs['pk'])
-        paginator = Paginator(question.get_sorted_answers(), settings.ANSWERS_PER_PAGE)
+        answers = question.get_sorted_answers()
+        paginator = Paginator(answers, settings.ANSWERS_PER_PAGE)
         try:
             answers = paginator.get_page(self.request.GET.get('page'))
         except (PageNotAnInteger, KeyError) as e:
@@ -212,3 +213,21 @@ class VoteActionView(LoginRequiredMixin, views.View):
             except ObjectDoesNotExist:
                 pass
         return HttpResponseNotFound('Incorrect request')
+
+
+class MyQuestionsListView(ListView):
+    model = Question
+    paginate_by = 10
+    template_name = 'myquestions.html'
+
+    def get_queryset(self):
+        return Question.get_by_user(self.request.user)
+
+
+class MyAnswersListView(ListView):
+    model = Answer
+    paginate_by = 10
+    template_name = 'myanswers.html'
+
+    def get_queryset(self):
+        return Answer.get_by_user(self.request.user)
