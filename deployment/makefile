@@ -5,12 +5,11 @@
 # cd ./hasker/deployment
 # yum install -y git make && cd ~ && git clone https://github.com/ivango812/hasker.git && cd ./hasker/deployment
 
-
 HOST=127.0.0.1:8000
 PYTHON=python3.6
 MANAGE=cd .. && $(PYTHON) manage.py
 
-all: prepare install
+all: prepare install createsuperuser test
 
 prepare:
 	yum install -y https://centos7.iuscommunity.org/ius-release.rpm
@@ -22,6 +21,9 @@ install:
 	pip install -r requirements.txt
 	$(MANAGE) migrate
 	$(MANAGE) loaddata ./deployment/fixtures.json
+
+createsuperuser:
+	echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('admin', 'admin@myproject.com', 'adminadmin')" | $(MANAGE) shell
 
 test:
 	$(MANAGE) test
