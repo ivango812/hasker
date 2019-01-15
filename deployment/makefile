@@ -1,3 +1,4 @@
+# docker run -it --rm --publish=127.0.0.1:8000:8000 centos
 # yum install -y git
 # yum install -y make
 # cd ~
@@ -5,9 +6,9 @@
 # cd ./hasker/deployment
 # yum install -y git make && cd ~ && git clone https://github.com/ivango812/hasker.git && cd ./hasker/deployment
 
-HOST=127.0.0.1:8000
+HOST=0.0.0.0:8000
 PYTHON=python3.6
-MANAGE=cd .. && $(PYTHON) manage.py
+MANAGE=$(PYTHON) ../manage.py
 
 all: prepare install createsuperuser test
 
