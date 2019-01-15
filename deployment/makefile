@@ -1,9 +1,4 @@
 # docker run -it --rm --publish=127.0.0.1:8000:8000 centos
-# yum install -y git
-# yum install -y make
-# cd ~
-# git clone https://github.com/ivango812/hasker.git
-# cd ./hasker/deployment
 # yum install -y git make && cd ~ && git clone https://github.com/ivango812/hasker.git && cd ./hasker/deployment
 
 HOST=0.0.0.0:8000
