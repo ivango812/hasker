@@ -2,9 +2,9 @@
 # yum install -y make
 # cd ~
 # git clone https://github.com/ivango812/hasker.git
-# cd ./hasker/develompent
-# yum install -y git make
-# cd ~ && git clone https://github.com/ivango812/hasker.git && cd ./hasker/develompent
+# cd ./hasker/deployment
+# yum install -y git make && cd ~ && git clone https://github.com/ivango812/hasker.git && cd ./hasker/deployment
+
 
 HOST=127.0.0.1:8000
 PYTHON=python3.6
@@ -21,7 +21,7 @@ prepare:
 install:
 	pip install -r requirements.txt
 	$(MANAGE) migrate
-	$(MANAGE) loaddata fixtures.json
+	$(MANAGE) loaddata ./deployment/fixtures.json
 
 test:
 	$(MANAGE) test
