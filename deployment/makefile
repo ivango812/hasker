@@ -3,7 +3,7 @@
 
 HOST=127.0.0.1:8000
 PYTHON=python3.6
-MANAGE=$(PYTHON) manage.py
+MANAGE=cd .. && $(PYTHON) manage.py
 
 all: prepare install
 
